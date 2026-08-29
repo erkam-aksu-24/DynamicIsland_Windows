@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{34ED3154-0401-418B-BADA-16CEFBD0DE10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.App", "src\DynamicIsland.App\DynamicIsland.App.csproj", "{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Presentation", "src\DynamicIsland.Presentation\DynamicIsland.Presentation.csproj", "{C0A0B987-7D9E-416F-8C84-3BD3D962C837}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Application", "src\DynamicIsland.Application\DynamicIsland.Application.csproj", "{7A7D697C-CDEB-43F4-8198-A497FFD37068}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Adapters", "src\DynamicIsland.Adapters\DynamicIsland.Adapters.csproj", "{90BA2E84-6043-4DF0-9658-9B0749D12E80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Platform", "src\DynamicIsland.Platform\DynamicIsland.Platform.csproj", "{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{630AF7D2-7B0C-4A43-B3DA-E7932A19F9DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Application.Tests", "tests\DynamicIsland.Application.Tests\DynamicIsland.Application.Tests.csproj", "{DF2BC656-D174-4027-820A-A7BD0FDD64FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicIsland.Adapters.Tests", "tests\DynamicIsland.Adapters.Tests\DynamicIsland.Adapters.Tests.csproj", "{D23BFF41-7713-4DA9-AAF4-F92EBA756C79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0A0B987-7D9E-416F-8C84-3BD3D962C837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A0B987-7D9E-416F-8C84-3BD3D962C837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A0B987-7D9E-416F-8C84-3BD3D962C837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A0B987-7D9E-416F-8C84-3BD3D962C837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A7D697C-CDEB-43F4-8198-A497FFD37068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A7D697C-CDEB-43F4-8198-A497FFD37068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A7D697C-CDEB-43F4-8198-A497FFD37068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A7D697C-CDEB-43F4-8198-A497FFD37068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90BA2E84-6043-4DF0-9658-9B0749D12E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90BA2E84-6043-4DF0-9658-9B0749D12E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90BA2E84-6043-4DF0-9658-9B0749D12E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90BA2E84-6043-4DF0-9658-9B0749D12E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2BC656-D174-4027-820A-A7BD0FDD64FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2BC656-D174-4027-820A-A7BD0FDD64FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2BC656-D174-4027-820A-A7BD0FDD64FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2BC656-D174-4027-820A-A7BD0FDD64FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D23BFF41-7713-4DA9-AAF4-F92EBA756C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D23BFF41-7713-4DA9-AAF4-F92EBA756C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D23BFF41-7713-4DA9-AAF4-F92EBA756C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D23BFF41-7713-4DA9-AAF4-F92EBA756C79}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C27C0AA-6838-4F2F-94F5-37E7EA64DF71} = {34ED3154-0401-418B-BADA-16CEFBD0DE10}
+		{C0A0B987-7D9E-416F-8C84-3BD3D962C837} = {34ED3154-0401-418B-BADA-16CEFBD0DE10}
+		{7A7D697C-CDEB-43F4-8198-A497FFD37068} = {34ED3154-0401-418B-BADA-16CEFBD0DE10}
+		{90BA2E84-6043-4DF0-9658-9B0749D12E80} = {34ED3154-0401-418B-BADA-16CEFBD0DE10}
+		{36E195D0-355C-4A18-9D4C-FE2BEB5A6D0F} = {34ED3154-0401-418B-BADA-16CEFBD0DE10}
+		{DF2BC656-D174-4027-820A-A7BD0FDD64FF} = {630AF7D2-7B0C-4A43-B3DA-E7932A19F9DA}
+		{D23BFF41-7713-4DA9-AAF4-F92EBA756C79} = {630AF7D2-7B0C-4A43-B3DA-E7932A19F9DA}
+	EndGlobalSection
+EndGlobal

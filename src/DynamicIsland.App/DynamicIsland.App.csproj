@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicIsland.Application\DynamicIsland.Application.csproj" />
+    <ProjectReference Include="..\DynamicIsland.Presentation\DynamicIsland.Presentation.csproj" />
+    <ProjectReference Include="..\DynamicIsland.Adapters\DynamicIsland.Adapters.csproj" />
+    <ProjectReference Include="..\DynamicIsland.Platform\DynamicIsland.Platform.csproj" />
+  </ItemGroup>
+
+</Project>
