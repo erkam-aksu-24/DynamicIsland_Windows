@@ -15,4 +15,8 @@
     <ProjectReference Include="..\..\src\DynamicIsland.Application\DynamicIsland.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Fakes\" />
+  </ItemGroup>
+
 </Project>
