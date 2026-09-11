@@ -1,6 +1,6 @@
 ﻿namespace DynamicIsland.Application.Media;
 
-public record MediaSessionsSnapshot(
+public record MediaSessionSnapshot(
     string SessionId,
     bool IsPlaying,
     DateTimeOffset LastChangedUtc);

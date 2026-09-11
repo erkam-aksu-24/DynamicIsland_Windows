@@ -4,8 +4,8 @@ namespace DynamicIsland.Application.UseCases;
 
 public class TogglePlayPauseHandler(IMediaTransport transport)
 {
-    Task ExecuteAsync(string sessionId)
+    public Task ExecuteAsync(string sessionId)
     {
-        return transport.TooglePlayPauseAsync(sessionId);
+        return transport.TogglePlayPauseAsync(sessionId);
     }
 }
