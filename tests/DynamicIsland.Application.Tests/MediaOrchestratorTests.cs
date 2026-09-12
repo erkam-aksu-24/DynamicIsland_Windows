@@ -41,4 +41,22 @@ public class MediaOrchestratorTests
         orchestrator.OnTrackChanged("spotify", new TrackInfo("Başka Şarkı", "Sanatçı", "Albüm"));
         Assert.Single(caught);                                     // aktif oturumdan TAM BİR haber
     }
+
+    [Fact]
+    public void OnSessionsChanged_EmptyList_ClearsActiveSession()
+    {
+        var orchestrator = new MediaOrchestrator();
+        var caught = new List<string?>();  // event tipi EventHandler<string?> — listeye dikkat
+
+        orchestrator.ActiveSessionChanged += (_, id) => caught.Add(id);
+
+        orchestrator.OnSessionsChanged(new[]{new MediaSessionSnapshot("spotify", IsPlaying:true, LastChangedUtc:DateTimeOffset.Parse("10:00") )}); // ACT 1: aktif seçilir
+        orchestrator.OnSessionsChanged(new[]{new MediaSessionSnapshot("spotify", IsPlaying:true, LastChangedUtc:DateTimeOffset.Parse("10:00") )});
+        orchestrator.OnSessionsChanged(Array.Empty<MediaSessionSnapshot>());  // ACT 2: Spotify öldü
+
+        Assert.Null(orchestrator.ActiveSessionId);
+        Assert.Equal(2, caught.Count); // 2 event: seçim + temizlenme
+        Assert.Equal("spotify", caught[0]);
+        Assert.Null(caught[1]);  // ikinci event null getirdi
+    }
 }
