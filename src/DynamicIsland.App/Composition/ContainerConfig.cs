@@ -10,6 +10,8 @@ public static class ContainerConfig
 
         services.AddSingleton<Shell.IslandWindow>();
 
+        services.AddSingleton<Shell.TrayIconHost>();
+
         return services.BuildServiceProvider();
     }
 }
