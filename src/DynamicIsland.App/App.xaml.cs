@@ -1,9 +1,9 @@
 ﻿using System.Windows;
+using DynamicIsland.Adapters.SmtcMedia;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DynamicIsland.App;
-
-public partial class App : System.Windows.Application
+public partial class App
 {
     private Mutex? _mutex;
     private Shell.TrayIconHost? _trayIconHost;
@@ -14,6 +14,8 @@ public partial class App : System.Windows.Application
 
         var container = Composition.ContainerConfig.Build();
         container.GetRequiredService<Shell.IslandWindow>().Show();
+        container.GetRequiredKeyedService<SmtcMediaController>(null).Start();
+
 
         var mutex = new Mutex(initiallyOwned: true, name: @"Local/DynamicIsland", out var createdNew);
         if (!createdNew)

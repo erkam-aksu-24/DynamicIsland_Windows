@@ -8,4 +8,8 @@
     <ProjectReference Include="..\DynamicIsland.Application\DynamicIsland.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+  </ItemGroup>
+
 </Project>
