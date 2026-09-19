@@ -1,17 +1,21 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
+﻿
+using DynamicIsland.Application.Media;
+using DynamicIsland.Application.Ports;
 
 namespace DynamicIsland.App.Shell;
 
 public class TrayIconHost : IDisposable
 {
-    //Alanlar
-    private NotifyIcon _trayIcon = new NotifyIcon();
-    private IslandWindow _window = new IslandWindow();
+    private readonly NotifyIcon _trayIcon;
+    private readonly IslandWindow _window;
+    private readonly MediaOrchestrator _orchestrator;
+    private readonly IMediaTransport _transport;
 
-    public TrayIconHost(IslandWindow window)
+    public TrayIconHost(IslandWindow window, MediaOrchestrator orchestrator, IMediaTransport transport)
     {
         _window = window;
+        _orchestrator = orchestrator;
+        _transport = transport;
         _trayIcon = new NotifyIcon
         {
             Text = "Dynamic Island",
@@ -21,8 +25,14 @@ public class TrayIconHost : IDisposable
         ContextMenuStrip menu = new ContextMenuStrip();
         menu.Items.Add("Göster/Gizle", null, (_, _) => Toggle()); //EventHandler iki discard
         menu.Items.Add("Çıkış", null, (_, _) => System.Windows.Application.Current.Shutdown());
+        menu.Items.Add("Test: Oynat/Duraklat", null, async (_, _) =>
+        {
+            var id = _orchestrator.ActiveSessionId;
+            if (id != null) await _transport.TogglePlayPauseAsync(id);
+        }); //TODO Seans 4 de silinecek.
         _trayIcon.ContextMenuStrip = menu;
     }
+
 
     private void Toggle()
     {
