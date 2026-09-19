@@ -8,12 +8,12 @@ namespace DynamicIsland.Adapters.SmtcMedia;
 public class SmtcMediaController(IMediaEventSink sink) : IMediaTransport
 {
     private SynchronizationContext? _ui;
-    private GlobalSystemMediaTransportControlsSessionManager _sessionManager;
+    private GlobalSystemMediaTransportControlsSessionManager? _sessionManager;
     private readonly Dictionary<string, SessionBundle> _sessions = new();
 
-    internal sealed class SessionBundle()
+    internal sealed class SessionBundle(GlobalSystemMediaTransportControlsSession session)
     {
-        public GlobalSystemMediaTransportControlsSession? Session { get; init;}
+        public GlobalSystemMediaTransportControlsSession Session { get; init;} = session;
         public DateTimeOffset LastUpdated { get; set;}
     }
 
@@ -48,9 +48,9 @@ public class SmtcMediaController(IMediaEventSink sink) : IMediaTransport
             GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing,
             b.LastUpdated)).ToList();
 
-        Debug.WriteLine($"[SMTC] snapshot: {snapshots.Count()}");
+        Debug.WriteLine($"[SMTC] snapshot: {snapshots}");
 
-        _ui.Post(_ => sink.OnSessionsChanged(snapshots.ToArray()), null);
+        _ui?.Post(_ => sink.OnSessionsChanged(snapshots.ToArray()), null);
     }
 
     private void OnManagerSessionsChanged(GlobalSystemMediaTransportControlsSessionManager sender, SessionsChangedEventArgs args)
@@ -94,18 +94,36 @@ public class SmtcMediaController(IMediaEventSink sink) : IMediaTransport
         }
     }
 
-    private void OnMediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender,
+    private async void LoadTrackInfo(GlobalSystemMediaTransportControlsSession session)
+    {
+        try
+        {
+            var props = await session.TryGetMediaPropertiesAsync();
+            var track = new TrackInfo(
+                props.Title,
+                props.Artist,
+                string.IsNullOrEmpty(props.AlbumTitle) ? null : props.AlbumTitle);
+            Debug.WriteLine($"[SMTC] track: {track}");
+            _ui?.Post(_ => sink.OnTrackChanged(session.SourceAppUserModelId, track), null);
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"[SMTC] track hatası: {e}");
+        }
+    }
+
+    private  void OnMediaPropertiesChanged(GlobalSystemMediaTransportControlsSession sender,
         MediaPropertiesChangedEventArgs args)
     {
-        // TODO Tur B : track bilgisi buradan çekilecek
-        Debug.WriteLine("[SMTC] media properties changed");
+        LoadTrackInfo(sender);
     }
 
     private void AttachSession(GlobalSystemMediaTransportControlsSession session)
     {
-        _sessions[session.SourceAppUserModelId] = new SessionBundle { Session = session};
+        _sessions[session.SourceAppUserModelId] = new SessionBundle(session);
         session.PlaybackInfoChanged += OnPlaybackChanged; // method group — her seferinde aynı referans
         session.MediaPropertiesChanged += OnMediaPropertiesChanged;
+        LoadTrackInfo(session);
     }
 
     private void DetachSession(string id)
