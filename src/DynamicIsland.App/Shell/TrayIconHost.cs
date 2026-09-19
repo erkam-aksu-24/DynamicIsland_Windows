@@ -1,13 +1,10 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
-
+﻿
 namespace DynamicIsland.App.Shell;
 
 public class TrayIconHost : IDisposable
 {
-    //Alanlar
-    private NotifyIcon _trayIcon = new NotifyIcon();
-    private IslandWindow _window = new IslandWindow();
+    private readonly NotifyIcon _trayIcon;
+    private readonly IslandWindow _window;
 
     public TrayIconHost(IslandWindow window)
     {
@@ -23,6 +20,7 @@ public class TrayIconHost : IDisposable
         menu.Items.Add("Çıkış", null, (_, _) => System.Windows.Application.Current.Shutdown());
         _trayIcon.ContextMenuStrip = menu;
     }
+
 
     private void Toggle()
     {

@@ -136,10 +136,28 @@ public class SmtcMediaController(IMediaEventSink sink) : IMediaTransport
         }
     }
 
-    public Task TogglePlayPauseAsync(string sessionId) => Task.CompletedTask;
+    public async Task TogglePlayPauseAsync(string sessionId)
+    {
+        if (!_sessions.TryGetValue(sessionId, out var bundle)) return;
+        Debug.WriteLine($"[SMTC] toggle: {sessionId}");
+        var ok = await bundle.Session.TryTogglePlayPauseAsync();
+        if (!ok) Debug.WriteLine($"[SMTC] toggle reddeildi {sessionId}");
+    }
 
-    public Task NextAsync(string sessionId) => Task.CompletedTask;
+    public async Task NextAsync(string sessionId)
+    {
+        if (!_sessions.TryGetValue(sessionId, out var bundle)) return;
+        Debug.WriteLine($"[SMTC] next: {sessionId}");
+        var ok = await bundle.Session.TrySkipNextAsync();
+        if (!ok) Debug.WriteLine($"[SMTC] next reddeildi {sessionId}");
+    }
 
-    public Task PreviousAsync(string sessionId) => Task.CompletedTask;
+    public async Task PreviousAsync(string sessionId)
+    {
+        if (!_sessions.TryGetValue(sessionId, out var bundle)) return;
+        Debug.WriteLine($"[SMTC] previous: {sessionId}");
+        var ok = await bundle.Session.TrySkipPreviousAsync();
+        if (!ok) Debug.WriteLine($"[SMTC] previous reddeildi {sessionId}");
+    }
 
 }
