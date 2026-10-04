@@ -2,7 +2,7 @@
 
 namespace DynamicIsland.Application.Media;
 
-public class MediaOrchestrator : IMediaEventSink
+public class MediaOrchestrator : IMediaEventSink, IMediaFeed
 {
     //Durum
     private string? _activeId;
