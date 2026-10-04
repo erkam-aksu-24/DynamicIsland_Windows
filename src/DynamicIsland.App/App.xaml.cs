@@ -12,12 +12,8 @@ public partial class App
     {
         base.OnStartup(e); // Wpf`in kendi kurulumunu unutma  her override`da base çağrısı.
 
-        var container = Composition.ContainerConfig.Build();
-        container.GetRequiredService<Shell.IslandWindow>().Show();
-        container.GetRequiredKeyedService<SmtcMediaController>(null).Start();
-
-
         var mutex = new Mutex(initiallyOwned: true, name: @"Local/DynamicIsland", out var createdNew);
+
         if (!createdNew)
         {
             mutex.Dispose();
@@ -26,7 +22,10 @@ public partial class App
         }
 
         _mutex = mutex;
+
+        var container = Composition.ContainerConfig.Build();
         container.GetRequiredService<Shell.IslandWindow>().Show();
+        container.GetRequiredService<SmtcMediaController>().Start();
         _trayIconHost = container.GetRequiredService<Shell.TrayIconHost>();
     }
 

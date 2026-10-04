@@ -34,11 +34,12 @@
 
 Öncül: GEREKSINIMLER.md Faz 1 kriterleri esas. Sıra bağımlılıklara göre:
 
-- [ ] **A. Temizlik turu**
-  - SkipNext/SkipPrevious handler'larını review et + commit et
-  - TrayIconHost diff'ini incele
-  - App.xaml.cs'deki 3 kusuru düzelt (mutex sırası, çift Show, keyed service)
-  - Doğrula: build temiz, ikinci instance anında sessizce kapanıyor
+- [x] **A. Temizlik turu** (2026-10-05 tamamlandı)
+  - ~~SkipNext/SkipPrevious handler'larını review et + commit et~~ (kullanıcı commit etti: 89f1fae)
+  - ~~TrayIconHost diff'ini incele~~ (kullanıcı commit etti)
+  - ~~App.xaml.cs'deki 3 kusuru düzelt (mutex sırası, çift Show, keyed service)~~ (kullanıcı yazdı, review: OK)
+  - Doğrulandı: build temiz, test 6/6, ikinci instance flaşsız sessizce kapanıyor (manuel test ✅)
+  - Not: GetRequiredKeyedService(null) crash ETMEZ (empirik test edildi, null → non-keyed fallback); düzeltme netlik içindi
 - [ ] **B. ViewModel hattı**
   - `IslandViewModel`: INotifyPropertyChanged + orchestrator'ın 3 event'ine abonelik
   - DI wiring: VM'i orchestrator'a bağla
