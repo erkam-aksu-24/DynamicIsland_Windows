@@ -1,14 +1,16 @@
 ﻿using System.Windows;                            // Window, SystemParameters
 using System.Windows.Interop;                    // WindowInteropHelper
-using DynamicIsland.Platform.Hwnd;               // NativeMethods (sabitler + P/Invoke)
+using DynamicIsland.Platform.Hwnd; // NativeMethods (sabitler + P/Invoke)
+using DynamicIsland.Presentation.Island;
 
 namespace DynamicIsland.App.Shell;
 
 public partial class IslandWindow : Window
 {
-    public IslandWindow()
+    public IslandWindow(IslandViewModel  viewModel)
     {
         InitializeComponent();                   // XAML ağacını kurar — mevcut, dokunma
+        DataContext = viewModel;
     }
 
     protected override void OnSourceInitialized(EventArgs e)   // ← BURAYA

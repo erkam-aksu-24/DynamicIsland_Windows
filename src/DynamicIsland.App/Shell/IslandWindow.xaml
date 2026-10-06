@@ -7,5 +7,11 @@
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
-    <Border Background="#CC1C1C1E" CornerRadius="26" />
+    <Border Background="#CC1C1C1E" CornerRadius="26">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,14,0">
+            <TextBlock Text="{Binding Title}" Foreground="AliceBlue" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="110"></TextBlock>
+            <TextBlock Text="-" Foreground="AliceBlue" FontSize="10"></TextBlock>
+            <TextBlock Text="{Binding Artist}" Foreground="AliceBlue" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="60"></TextBlock>
+        </StackPanel>
+    </Border>
 </Window>

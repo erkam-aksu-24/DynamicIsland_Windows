@@ -14,6 +14,7 @@ public class IslandViewModel : ObservableObject
         _feed.ActiveTrackChanged += OnTrackChanged;
         _feed.ActivePlaybackChanged += (_, p) => IsPlaying = p;
         _feed.ActiveSessionChanged += OnSessionChanged;
+
     }
 
     private void OnSessionChanged(object? sender, string? sessionId)
