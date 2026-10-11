@@ -6,7 +6,7 @@ namespace DynamicIsland.Presentation.Island;
 public class IslandViewModel : ObservableObject
 {
     private readonly IMediaFeed _feed;
-    private string? lastShownTitle;
+    private string? _lastShownTitle;
     public event EventHandler? ShowRequested;
 
     public IslandViewModel(IMediaFeed feed)
@@ -32,9 +32,9 @@ public class IslandViewModel : ObservableObject
         Title = e.Title;
         Artist = e.Artist;
 
-        if (e.Title != lastShownTitle)
+        if (e.Title != _lastShownTitle)
         {
-            lastShownTitle = e.Title;
+            _lastShownTitle = e.Title;
             ShowRequested?.Invoke(this, EventArgs.Empty); //düdük
         }
     }

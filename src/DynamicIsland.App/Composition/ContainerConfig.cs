@@ -1,4 +1,5 @@
 ﻿using DynamicIsland.Adapters.SmtcMedia;
+using DynamicIsland.App.Preferences;
 using DynamicIsland.Application.Media;
 using DynamicIsland.Application.Ports;
 using DynamicIsland.Presentation.Island;
@@ -20,6 +21,7 @@ public static class ContainerConfig
         services.AddSingleton<SmtcMediaController>();
         services.AddSingleton<IMediaTransport>(sp => sp.GetRequiredService<SmtcMediaController>());
         services.AddSingleton<IslandViewModel>();
+        services.AddSingleton<IUserPreferences, JsonPreferencesStore>();
 
 
 

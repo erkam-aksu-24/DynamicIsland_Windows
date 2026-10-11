@@ -1,17 +1,22 @@
 ﻿using System.Windows;                            // Window, SystemParameters
 using System.Windows.Interop;                    // WindowInteropHelper
 using DynamicIsland.Platform.Hwnd; // NativeMethods (sabitler + P/Invoke)
-using System.Windows.Threading; // DispatcherTimer burada
+using System.Windows.Threading;
+using DynamicIsland.Application.Ports; // DispatcherTimer burada
 using DynamicIsland.Presentation.Island;
 
 namespace DynamicIsland.App.Shell;
 
 public partial class IslandWindow : Window
 {
-    private DispatcherTimer? _timer;
+    private readonly DispatcherTimer? _timer;
+    private readonly int _collapseSeconds;
 
-    public IslandWindow(IslandViewModel  viewModel)
+    public IslandWindow(IslandViewModel  viewModel, IUserPreferences preferences)
     {
+        var preference = preferences;
+        _collapseSeconds = preference.LoadSettings().CollapseAfterSeconds;
+
         InitializeComponent();                   // XAML ağacını kurar — mevcut, dokunma
         DataContext = viewModel;
 
@@ -27,7 +32,7 @@ public partial class IslandWindow : Window
                 Show();
             }
 
-            _timer.Interval = TimeSpan.FromSeconds(5); //TODO süre ayarlardan gelecek.
+            _timer.Interval = TimeSpan.FromSeconds(_collapseSeconds);
             _timer.Start();
         };
     }

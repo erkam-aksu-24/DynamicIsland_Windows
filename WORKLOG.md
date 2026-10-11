@@ -4,6 +4,25 @@
 > Amaç: AI hafızası silinse bile proje tarihi kodun yanında kalsın.
 > Ayrıntılı gereksinimler için: `GEREKSINIMLER.md` — kodlama kuralları için: `.agent`
 
+## 2026-10-12 — Faz1 Adım 5 tamamlandı: ayar dosyası hattı canlı 🎉
+
+**5. Ayar bağlama ✅**
+- `JsonPreferencesStore` (App/Preferences) — `IUserPreferences`'ın ilk gerçek implementasyonu
+  - Yol: `%APPDATA%\DynamicIsland\settings.json` (GetFolderPath + Path.Combine, hardcode yok)
+  - Ctor: klasör garantisi (CreateDirectory idempotent — Exists kontrolü gereksiz, silindi)
+  - Load: 4 dal — dosya yok→defaults; sağlam→deserialize; null→defaults; bozuk JSON→defaults
+  - Save: serialize + yazma; hata → Debug.WriteLine (sessiz, çökme yok)
+- DI: `AddSingleton<IUserPreferences, JsonPreferencesStore>()` (arayüz→somut doğrudan desen)
+- IslandWindow: ctor'a IUserPreferences enjeksiyonu; `_collapseSeconds` field'ı — **tek okuma
+  ctor'da**, sıcak yolda I/O yok (her şarkı değişiminde disk okuması engellendi)
+- Doğrulandı (manuel): A) dosya yok→5sn varsayılan; B) elle `{ "CollapseAfterSeconds": 12 }`
+  → hap 12 sn açık kalmalı ✅ (kullanıcı sözleşmesi canlı); C) bozuk JSON→çökme yok, 5sn ✅
+- Öğrenilen: %APPDATA% ortam değişkeni ↔ SpecialFolder.ApplicationData; idempotent API;
+  Nullable sözleşme uyumu (port `IslandSettings` derken implementasyon `IslandSettings?`
+  olmaz — zayıf söz CS8602); sıcak yolda I/O kaldırmama; catch+throw anti-pattern
+
+**Faz 1 durum özeti:** A✅ B✅ C✅ E✅ 5✅ — kalan: **D (ses tekerleği)**, F (kapanış kriteri turu)
+
 ## 2026-10-11 — Faz1 C2 tamamlandı: otomatik aç/kapa 🎉 (Faz 1 fonksiyonel çekirdek bitti)
 
 **C2. Otomatik aç/kapa ✅**
@@ -97,9 +116,10 @@
   - Doğrulandı: build temiz, test 6/6, ikinci instance flaşsız sessizce kapanıyor (manuel test ✅)
   - Not: GetRequiredKeyedService(null) crash ETMEZ (empirik test edildi, null → non-keyed fallback); düzeltme netlik içindi
 - [x] **B. ViewModel hattı** (2026-10-06/07 tamamlandı — üstteki 2026-10-07 girdisine bak)
-- [x] **C. UI bağlama + otomatik aç/kapa** (2026-10-11 tamamlandı — üstteki 2026-10-11 girdisine bak)
+- [x] **C. UI bağlama + otomatik aç/kapa** (2026-10-11 tamamlandı — üstteki girdilere bak)
   - C1: binding + MaxWidth/trimming ✅; C2: ShowRequested + DispatcherTimer ✅
-  - Bekleyen: 5 sabiti → IslandSettings.CollapseAfterSeconds bağlanacak (C2 takip işi)
+- [x] **5. Ayar dosyası hattı** (2026-10-12 tamamlandı — üstteki girdiye bak)
+  - JsonPreferencesStore + DI + pencerede tek-okuma; 5→CollapseAfterSeconds ✅
 - [ ] **D. Ses tekerleği**
   - Hap üzerinde `PreviewMouseWheel` → `AdjustVolumeHandler`
   - Doğrula: tekerlek Windows ses açılırını oynatır (IslandSettings.WheelVolumeStep)
