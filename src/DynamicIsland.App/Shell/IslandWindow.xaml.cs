@@ -1,16 +1,35 @@
 ﻿using System.Windows;                            // Window, SystemParameters
 using System.Windows.Interop;                    // WindowInteropHelper
 using DynamicIsland.Platform.Hwnd; // NativeMethods (sabitler + P/Invoke)
+using System.Windows.Threading; // DispatcherTimer burada
 using DynamicIsland.Presentation.Island;
 
 namespace DynamicIsland.App.Shell;
 
 public partial class IslandWindow : Window
 {
+    private DispatcherTimer? _timer;
+
     public IslandWindow(IslandViewModel  viewModel)
     {
         InitializeComponent();                   // XAML ağacını kurar — mevcut, dokunma
         DataContext = viewModel;
+
+        //Kronemetreyi kur
+        _timer = new DispatcherTimer();
+        _timer.Tick += (_, _) => {Hide(); _timer.Stop();};
+
+        //VM e abone ol
+        viewModel.ShowRequested += (_, _) =>
+        {
+            if (!IsVisible)
+            {
+                Show();
+            }
+
+            _timer.Interval = TimeSpan.FromSeconds(5); //TODO süre ayarlardan gelecek.
+            _timer.Start();
+        };
     }
 
     protected override void OnSourceInitialized(EventArgs e)   // ← BURAYA
