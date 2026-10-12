@@ -72,9 +72,10 @@ App ──► Presentation ──► Application ◄── Adapters
 - Kontroller: play/pause, next, prev; hap üzerinde fare tekerleği = master ses.
 - Açıl/kapan spring animasyonu. Ayarlar JSON (kapanma süresi, monitör, hassasiyet).
 - Tek instance Mutex + tray menüsü. Use-case katmanına fake `IMediaTransport` ile unit test.
-- ✅ **Kriter:** Spotify'dan Chrome YouTube'a geçiş ~1 sn'de otomatik güncellenir;
-  hapdaki play/pause her iki uygulamada da çalışır; tekerlek Windows ses açılırını oynatır;
-  tam ekran (borderless) uygulama açılınca hap kendini gizler.
+- ✅ **Kriter:** Spotify'dan Chrome YouTube'a geçiş ~1 sn'de otomatik güncellenir (✅ 2026-10-13 kanıtlandı);
+  hapdaki play/pause her iki uygulamada da çalışır (⚠️ komut hattı kanıtlı, **UI Faz 2'ye ertelendi**);
+  tekerlek Windows ses açılırını oynatır (✅ 2026-10-13 kanıtlandı);
+  tam ekran (borderless) uygulama açılınca hap kendini gizler (⏭️ **Faz 2'ye taşındı**).
 
 ### Faz 2 — Sağlamlık (hafta sonu işi)
 - DWM acrylic/blur zemin. Çoklu oturum seçici (Spotify + Chrome aynı anda çalarken pinleme).

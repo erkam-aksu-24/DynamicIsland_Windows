@@ -4,6 +4,71 @@
 > Amaç: AI hafızası silinse bile proje tarihi kodun yanında kalsın.
 > Ayrıntılı gereksinimler için: `GEREKSINIMLER.md` — kodlama kuralları için: `.agent`
 
+## 2026-10-13 — F turu: Faz 1 KAPATILDI 🏁 (2 erteleme notuyla)
+
+**F. Kapanış kriterleri turu ✅**
+- Kriter 1 (Spotify→Chrome ~1 sn): **elle test ✅** — geçiş "saniyesinde"; MediaOrchestrator
+  aktif oturum seçimi + track cache/replay (E) bu hızı sağlıyor
+- Kriter 3 (tekerlek = master ses): **canlı test ✅** (2026-10-13 D girdisi)
+- Kriter 2 (play/pause iki uygulamada): **kısmi** — komut hattı (TogglePlayPauseHandler + unit
+  test, Tur C) kanıtlı; ama hap/tray UI'sında play/pause butonu YOK (tray yalnız Göster/Gizle +
+  Çıkış — kod incelemesiyle tespit edildi). UI bağlantısı Faz 2'ye ertelendi
+- Kriter 4 (tam ekran gizlenme): kod hiç yazılmamıştı (Platform README'de planlı); karar:
+  **Faz 2'ye resmen taşındı** (zaten §6 risk tablosunda SHQueryUserNotificationState ile yerli yeri)
+- Sonuç: **Faz 1 kapatıldı** — "fonksiyonel widget" çekirdeği canlı (şarkı bilgisi + otomatik
+  aç/kapa + ayar dosyası + ses tekerleği). İki dürüst erteleme: play/pause UI, tam ekran gizlenme
+
+**Öğrenilen:** kapanış kriteri turu kod yazma değil KANIT toplama işi; "kısmi"yi kapatırken dürüst
+belgelemek, yeşil-yeşil göstermekten değerli — Faz 2 backlog'u iki somut kalemle başlıyor
+
+**Faz 2 backlog'a aktarılanlar (GEREKSINIMLER.md'den + yeni):** acrylic, oturum seçici, ayarlar
+UI, play/pause butonu (hap + tray), tam ekran gizlenme (SHQueryUserNotificationState),
+IMMNotificationClient (cihaz değişimi), soak testi
+
+## 2026-10-13 — Faz1 D tamamlandı: ses tekerleği canlı 🎉
+
+**D. Ses tekerleği ✅**
+- `CoreAudioController` (Adapters/CoreAudio) — `IAudioController`'ın ilk gerçek implementasyonu
+  - COM zinciri: MMDeviceEnumerator → GetDefaultAudioEndpoint(eRender=0, eConsole=0) →
+    Activate(IID_IAudioEndpointVolume) → Get/SetMasterVolumeLevelScalar (0.0–1.0 skaler — port
+    sözleşmesiyle birebir örtüşme, yalnız float↔double dönüşümü adapter sınırında)
+  - COM sözleşmeleri [ComImport] gölge arayüzlerle; vtable gap tekniği
+    (_VtblGap1_4 / _VtblGap1_1 — sayılar resmi endpointvolume.h'dan: Set'ten önce 4, Get'ten önce 1)
+  - Hata politikası: **last-known cache** — ctor/Get/Set try-catch + Debug.WriteLine (fail-soft);
+    endpoint çözülemezse null kalır (kör mod), cache'e yalnızca doğrulanmış değer girer
+  - `eConsole = 0` — IDL doğrulaması: ERole {eConsole=0, eMultimedia=1, eCommunications=2};
+    ilk yazımda 1'di (eMultimedia olurdu), canlı test bunu FARK ETMEZ çünkü çoğu sistemde iki rol
+    aynı cihazı gösterir — rol-özgü cihaz seçiminde yanlış cihaza yazardı
+- IslandWindow: `OnPreviewMouseWheel` **override** (Yol B) — XAML attribute yerine override deseni,
+  base çağrısıyla; çentik = `e.Delta / 120.0` (serbest dönüşlü farede kesirli adım korunur)
+  × `WheelVolumeStep` → `AdjustVolumeHandler.Execute`; `e.Handled = true`; tekerlekte timer restart
+- DI (+2 satır): `IAudioController→CoreAudioController` + `AdjustVolumeHandler`
+- `JsonPreferencesStore`: CS8603 → `settings ?? new IslandSettings()` — WORKLOG'un "null→defaults"
+  4. dalı kodda eksikti (WORKLOG 4 dal diyordu, kod 3 daldı); nullable uyarı sürüklenmeyi yakaladı
+- Doğrulandı: build 0 uyarı/0 hata; test **8/8**; canlı tur — **odak başka uygulamadayken** hap
+  üzerinde tekerlek ses açılırını oynattı ✅ (WM_MOUSEWHEEL Win10+ imleç-altı kuralı teyit edildi;
+  NOACTIVATE pencere fare/tekerlek girdisi alıyor; HwndSource.AddHook yedeğine gerek kalmadı)
+
+**Öğrenilen:**
+- `[ComImport]` coclass + `sealed` → **CS0030**: derleyici sealed sınıfı arayüze cast'e izin vermez
+  (alt sınıf ihtimali kapanınca COM QI yolu görünmez). Coclass'lar sealed yapılmaz. Kanıt deneyiyle
+  bulundu: birebir kopya izole proje → aynı hata; sealed kaldır → build temiz + `dotnet run` True
+  (CoCreateInstance gerçekten ateşlendi)
+- CS8603 nullable uyarısı = "belgelenen niyet ↔ kod" sürüklenme dedektörü; `"null"` geçerli
+  JSON'dur ve catch'e düşmez → `??` ile 4. dal tamamlandı
+- WM_MOUSEWHEEL tarihi (Raymond Chen): 1996'dan beri odak penceresine gider (klavye durumu
+  kuyruğa bağlıydı); Win10+ pencere yöneticisi imleç-altına kırıyor; NOACTIVATE pencere
+  WM_MOUSEACTIVATE'e rağmen fare girdisini alır (XMouse kenar durumu → Faz 2 notu)
+- ComImport cast = QueryInterface; retval dönüşümü: native `float* pfLevel` out'u C# dönüş
+  değerine eşlenir (PreserveSig'siz konvansiyon)
+- Sabit-ad disiplini: adı `eConsole` olan sabitin değeri 1 ise kod yalan söyler; ve
+  **sabitleri kendi gözünle belgelemeden onaylatma** — mentor onayı hatalıydı, SDK IDL teyit etti
+
+**Bilinen sınırlama:** ses cihazı değişimi takip edilmiyor (IMMNotificationClient → Faz 2);
+Sndvol'den dış değişiklik callback'siz cache'i bayatlatmaz (handler her seferinde taze GetVolume).
+
+**Faz 1 durum özeti:** A✅ B✅ C✅ D✅ E✅ 5✅ — kalan: **F (kapanış kriteri turu)**
+
 ## 2026-10-12 — Faz1 Adım 5 tamamlandı: ayar dosyası hattı canlı 🎉
 
 **5. Ayar bağlama ✅**
@@ -120,14 +185,15 @@
   - C1: binding + MaxWidth/trimming ✅; C2: ShowRequested + DispatcherTimer ✅
 - [x] **5. Ayar dosyası hattı** (2026-10-12 tamamlandı — üstteki girdiye bak)
   - JsonPreferencesStore + DI + pencerede tek-okuma; 5→CollapseAfterSeconds ✅
-- [ ] **D. Ses tekerleği**
-  - Hap üzerinde `PreviewMouseWheel` → `AdjustVolumeHandler`
-  - Doğrula: tekerlek Windows ses açılırını oynatır (IslandSettings.WheelVolumeStep)
+- [x] **D. Ses tekerleği** (2026-10-13 tamamlandı — üstteki girdiye bak)
+  - CoreAudioController (Core Audio COM zinciri) + OnPreviewMouseWheel override → AdjustVolumeHandler
+  - Doğrulandı: canlı tur — odak başka uygulamada iken tekerlek ses açılırını oynattı; 8/8 yeşil
 - [x] **E. Geç gelen şarkı düzeltmesi** (2026-10-07 tamamlandı — üstteki girdiye bak)
   - Orchestrator'a oturum başına TrackInfo cache; aktifleşince replay
   - Budama + hayalet testi; 8/8 yeşil
-- [ ] **F. Faz 1 kapanış kriteri turu**
-  - GEREKSINIMLER.md §5 Faz 1 ✅ kriterlerini elle test et (Spotify↔Chrome geçiş ~1 sn, play/pause iki yönlü, tekerlek, tam ekran gizlenme — son madde Faz 2'ye ertelenebilir)
+- [x] **F. Faz 1 kapanış kriteri turu** (2026-10-13 tamamlandı — üstteki girdiye bak)
+  - Kriter 1 + 3 kanıtlı; kriter 2 kısmi (UI Faz 2'ye), kriter 4 Faz 2'ye taşındı
+  - **Faz 1 kapatıldı** — Faz 2'ye geçildi
 
 Faz 1 kapanınca Faz 2'ye (acrylic, oturum seçici, ayarlar UI, soak testi) geçilir.
 
