@@ -1,7 +1,9 @@
-﻿using DynamicIsland.Adapters.SmtcMedia;
+﻿using DynamicIsland.Adapters.CoreAudio;
+using DynamicIsland.Adapters.SmtcMedia;
 using DynamicIsland.App.Preferences;
 using DynamicIsland.Application.Media;
 using DynamicIsland.Application.Ports;
+using DynamicIsland.Application.UseCases;
 using DynamicIsland.Presentation.Island;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +24,8 @@ public static class ContainerConfig
         services.AddSingleton<IMediaTransport>(sp => sp.GetRequiredService<SmtcMediaController>());
         services.AddSingleton<IslandViewModel>();
         services.AddSingleton<IUserPreferences, JsonPreferencesStore>();
+        services.AddSingleton<IAudioController, CoreAudioController>();
+        services.AddSingleton<AdjustVolumeHandler>();
 
 
 

@@ -31,7 +31,8 @@ public class JsonPreferencesStore : IUserPreferences
             }
 
             var json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<IslandSettings>(json);
+            var settings = JsonSerializer.Deserialize<IslandSettings>(json);
+            return settings ?? new IslandSettings();
         }
         catch (Exception e)
         {
